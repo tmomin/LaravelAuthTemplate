@@ -10,7 +10,7 @@
                     </div>
 
                     <div class="card-body">
-                        <form class="form-horizontal" method="post" action="/login">
+                        <form class="form-horizontal" method="post" action="/login" id="login-form">
 
                             {{ csrf_field() }}
 
@@ -62,4 +62,14 @@
             </div>
         </div>
     </div>
-@stop
+@endsection
+
+@section('script')
+    <script type="text/javascript">
+        $('#login-form').submit(function(event) {
+            event.preventDefault()
+
+            alert('message')
+        })
+    </script>
+@endsection

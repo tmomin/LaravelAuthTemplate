@@ -33,6 +33,8 @@
     @include('layouts.footer')
 </div>
 
+@yield('script');
+
 
 <!-- Bootstrap core JavaScript
 ================================================== -->
