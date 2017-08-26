@@ -27,17 +27,17 @@ class LoginController extends Controller
                 $slug = Sentinel::getUser()->roles()->first()->slug;
 
                 if($slug == 'admin')
-                    return redirect('/earnings');
-                elseif($slug == 'manager')
-                    return redirect('/tasks');
+                    return response()->json(['redirect' => '/earnings']);
+                elseif($slug == 'user')
+                    return response()->json(['redirect' => '/tasks']);
             } else {
-                return redirect()->back()->with(['error' => 'Wrong credentials.']);
+                return response()->json(['error' => 'Wrong credentials.'], 500);
             }
         } catch (ThrottlingException $e) {
             $delay = $e->getDelay();
-            return redirect()->back()->with(['error' => "You are banned for $delay seconds."]);
+            return response()->json(['error' => "You are banned for $delay seconds."], 500);
         } catch (NotActivatedException $e) {
-            return redirect()->back()->with(['error' => "Your account is not activated."]);
+            return response()->json(['error' => "Your account is not activated."], 500);
         }
     }
 

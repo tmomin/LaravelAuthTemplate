@@ -10,21 +10,11 @@
                     </div>
 
                     <div class="card-body">
-                        <form class="form-horizontal" method="post" action="/login" id="login-form">
+                        <form class="form-horizontal" id="login-form">
 
-                            {{ csrf_field() }}
+                            <div class="alert alert-danger" style="display: none;"></div>
 
-                            @if(session('error'))
-                                <div class="alert alert-danger">
-                                    {{ session('error') }}
-                                </div>
-                            @endif
-
-                            @if(session('success'))
-                                <div class="alert alert-success">
-                                    {{ session('success') }}
-                                </div>
-                            @endif
+                            <div class="alert alert-success" style="display: none;"></div>
 
                             <div class="form-group">
                                 <label for="email" class="cols-sm-2 control-label">Email</label>
@@ -66,10 +56,33 @@
 
 @section('script')
     <script type="text/javascript">
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
         $('#login-form').submit(function(event) {
             event.preventDefault()
 
-            alert('message')
+            var postData = {
+                'email' : $('input[name=email]').val(),
+                'password' : $('input[name=password]').val(),
+                'remember_me' : $('input[name=remember_me]').is(':checked')
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: '/login',
+                data: postData,
+                success: function (response) {
+                    window.location.href = response.redirect
+                },
+                error: function (response) {
+                    $('.alert-danger').text(response.responseJSON.error)
+                    $('.alert-danger').show()
+                }
+            })
         })
     </script>
 @endsection
