@@ -10,15 +10,10 @@
                     </div>
 
                     <div class="card-body">
-                        <form class="form-horizontal" method="post" action="/forgot-password">
+                        <form class="form-horizontal" id="forgot-password-form">
 
-                            {{ csrf_field() }}
-
-                            @if(session('success'))
-                                <div class="alert alert-success">
-                                    {{ session('success') }}
-                                </div>
-                            @endif
+                            <div class="alert alert-success" style="display: none;"></div>
+                            <div class="alert alert-error" style="display: none;"></div>
 
                             <div class="form-group">
                                 <label for="email" class="cols-sm-2 control-label">Email</label>
@@ -40,3 +35,36 @@
         </div>
     </div>
 @stop
+
+@section('script')
+    <script type="text/javascript">
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $('#forgot-password-form').submit(function(event) {
+            event.preventDefault()
+
+            var postData = {
+                'email' : $('input[name=email]').val()
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: '/forgot-password',
+                data: postData,
+                success: function (response) {
+//                    window.location.href = response.redirect
+                    $('.alert-success').text(response.success)
+                    $('.alert-success').show()
+                },
+                error: function (response) {
+                    $('.alert-danger').text(response.error)
+                    $('.alert-danger').show()
+                }
+            })
+        })
+    </script>
+@endsection

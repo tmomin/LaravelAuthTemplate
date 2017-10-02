@@ -10,9 +10,7 @@
                     </div>
 
                     <div class="card-body">
-                        <form class="form-horizontal" method="post" action="/register">
-
-                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                        <form class="form-horizontal" id="register-form">
 
                             <div class="form-group">
                                 <label for="first_name" class="cols-sm-2 control-label">First Name</label>
@@ -55,7 +53,7 @@
                             </div>
 
 
-                            <div class="form-group ">
+                            <div class="form-group">
                                 <button type="submit" class="btn btn-primary btn-lg btn-block login-button">Register</button>
                             </div>
                         </form>
@@ -65,3 +63,37 @@
         </div>
     </div>
 @stop
+
+@section('script')
+    <script type="text/javascript">
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $('#register-form').submit(function(event) {
+            event.preventDefault()
+
+            var postData = {
+                'first_name' : $('input[name=first_name]').val(),
+                'last_name' : $('input[name=last_name]').val(),
+                'email' : $('input[name=email]').val(),
+                'password' : $('input[name=password]').val()
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: '/register',
+                data: postData,
+                success: function (response) {
+                    window.location.href = response.redirect
+                },
+                error: function (response) {
+                    $('.alert-danger').text(response.error)
+                    $('.alert-danger').show()
+                }
+            })
+        })
+    </script>
+@endsection

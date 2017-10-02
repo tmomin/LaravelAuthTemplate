@@ -13,7 +13,6 @@
                         <form class="form-horizontal" id="login-form">
 
                             <div class="alert alert-danger" style="display: none;"></div>
-
                             <div class="alert alert-success" style="display: none;"></div>
 
                             <div class="form-group">
@@ -27,7 +26,7 @@
                             <div class="form-group">
                                 <label for="password" class="cols-sm-2 control-label required">Password</label>
                                     <div class="input-group">
-                                        <span class="input-group-addon"><i class="fa fa-key aria-hidden="true"></i></span>
+                                        <span class="input-group-addon"><i class="fa fa-key" aria-hidden="true"></i></span>
                                         <input type="password" class="form-control" name="password" id="password"  placeholder="Your Password" required/>
                                     </div>
                             </div>
@@ -79,7 +78,7 @@
                     window.location.href = response.redirect
                 },
                 error: function (response) {
-                    $('.alert-danger').text(response.responseJSON.error)
+                    $('.alert-danger').text(response.error)
                     $('.alert-danger').show()
                 }
             })

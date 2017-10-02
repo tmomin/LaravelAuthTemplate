@@ -10,7 +10,7 @@
                     </div>
 
                     <div class="card-body">
-                        <form class="form-horizontal" method="post" action="">
+                        <form class="form-horizontal" id="reset-password-form">
 
                             @if (count($errors) > 0)
                                 <div class="alert alert-danger">
@@ -21,8 +21,6 @@
                                     </ul>
                                 </div>
                             @endif
-
-                            {{ csrf_field() }}
 
                             <div class="form-group">
                                 <label for="password" class="cols-sm-2 control-label">Password</label>
@@ -54,3 +52,37 @@
         </div>
     </div>
 @stop
+
+@section('script')
+    <script type="text/javascript">
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $('#reset-password-form').submit(function(event) {
+            event.preventDefault()
+
+            var postData = {
+                'password' : $('input[name=password]').val(),
+                'password_confirmation' : $('input[name=password_confirmation]').val(),
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: this.url,
+                data: postData,
+                success: function (response) {
+                    window.location.href = response.redirect
+                    $('.alert-success').text(response.success)
+                    $('.alert-success').show()
+                },
+                error: function (response) {
+                    $('.alert-danger').text(response.error)
+                    $('.alert-danger').show()
+                }
+            })
+        })
+    </script>
+@endsection
