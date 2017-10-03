@@ -14,7 +14,11 @@
 
                             <div class="alert alert-danger" style="display: none;"></div>
 
-                            <div class="alert alert-success" style="display: none;"></div>
+                            @if (session('success'))
+                                <div class="alert alert-success">
+                                    {{ session('success') }}
+                                </div>
+                            @endif
 
                             <div class="form-group">
                                 <label for="email" class="cols-sm-2 control-label">Email</label>
