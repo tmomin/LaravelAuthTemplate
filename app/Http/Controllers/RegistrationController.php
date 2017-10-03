@@ -22,7 +22,7 @@ class RegistrationController extends Controller
         $role = Sentinel::findRoleBySlug('user');
         $role->users()->attach($user);
         $this->sendEmail($user, $activation->code);
-        return redirect('/');
+        return response()->json(['redirect' => '/']);
     }
 
     private function sendEmail($user, $code)

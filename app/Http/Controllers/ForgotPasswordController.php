@@ -20,13 +20,13 @@ class ForgotPasswordController extends Controller
         $user = User::whereEmail($request->email)->first();
 
         if(count($user) == 0)
-            return redirect()->back()->with(['success' => "Reset code was sent to your email."]);
+            return response()->json(['success' => "Reset code was sent to your email."]);
 
         $reminder = Reminder::exists($user) ?: Reminder::create($user);
 
         $this->sendEmail($user, $reminder->code);
 
-        return redirect()->back()->with(['success' => "Reset code was sent to your email."]);
+        return response()->json(['success' => "Reset code was sent to your email."]);
     }
 
     public function resetPassword($email, $resetCode)
@@ -62,12 +62,16 @@ class ForgotPasswordController extends Controller
             if($resetCode == $reminder->code) {
                 Reminder::complete($user, $resetCode, $request->password);
 
-                return redirect('/login')->with('success', 'Please login with your new password');
+                return response()->json(['redirect' => '/login', 'success' => 'Please login with your new password']);
+
+//                return redirect('/login')->with('success', 'Please login with your new password');
             }
             else
-                return redirect('/');
+                return response()->json(['redirect' => '/']);
+//                return redirect('/');
         } else {
-            return redirect('/');
+            return response()->json(['redirect' => '/']);
+//            return redirect('/');
         }
     }
 
